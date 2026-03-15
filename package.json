@@ -1,0 +1,80 @@
+{
+  "name": "starter-vue3",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.25.0",
+  "description": "Vue 3 component library starter with Tailwind CSS and local preview",
+  "author": "huangzida <398926656@qq.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/huangzida/starter-vue3#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huangzida/starter-vue3.git"
+  },
+  "bugs": "https://github.com/huangzida/starter-vue3/issues",
+  "keywords": [],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "build": "vite build && vue-tsc -p tsconfig.build.json --declaration --emitDeclarationOnly --declarationDir dist && node ./scripts/postbuild.mjs",
+    "dev": "vite build --watch",
+    "lint": "eslint --no-error-on-unmatched-pattern --no-warn-ignored --ignore-pattern .trae/** src playground test scripts eslint.config.js vite.config.ts vitest.config.ts",
+    "prepublishOnly": "nr build",
+    "preview": "pnpm run build && vite --config playground/vite.config.ts",
+    "preview:build": "pnpm run build && vite build --config playground/vite.config.ts",
+    "preview:dist": "pnpm run preview:build && vite preview --config playground/vite.config.ts",
+    "release": "bumpp",
+    "test": "vitest run",
+    "typecheck": "tsc",
+    "prepare": "simple-git-hooks"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "catalog:cli",
+    "@antfu/ni": "catalog:cli",
+    "@antfu/utils": "catalog:inlined",
+    "@tailwindcss/vite": "catalog:cli",
+    "@types/node": "catalog:types",
+    "@vitejs/plugin-vue": "catalog:framework",
+    "@vue/test-utils": "catalog:testing",
+    "bumpp": "catalog:cli",
+    "eslint": "catalog:cli",
+    "jsdom": "catalog:testing",
+    "lint-staged": "catalog:cli",
+    "publint": "catalog:cli",
+    "simple-git-hooks": "catalog:cli",
+    "tailwindcss": "catalog:cli",
+    "tinyexec": "catalog:testing",
+    "tsx": "catalog:cli",
+    "typescript": "catalog:cli",
+    "vite": "catalog:cli",
+    "vite-plugin-css-injected-by-js": "catalog:cli",
+    "vitest": "catalog:testing",
+    "vitest-package-exports": "catalog:testing",
+    "vue": "catalog:framework",
+    "vue-tsc": "catalog:framework",
+    "yaml": "catalog:testing"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
+}
