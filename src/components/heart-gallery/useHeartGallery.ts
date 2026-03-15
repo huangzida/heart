@@ -99,6 +99,17 @@ function superformulaRadius(theta: number, m: number, n1: number, n2: number, n3
   return base === 0 ? 0 : 1 / base
 }
 
+function signPow(value: number, power: number): number {
+  return Math.sign(value) * Math.abs(value) ** power
+}
+
+function classicHeartPoint(t: number, scale: number): Point {
+  return {
+    x: scale * 16 * Math.sin(t) ** 3,
+    y: scale * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)),
+  }
+}
+
 const models: HeartModel[] = [
   {
     id: 'classic-pair',
@@ -550,6 +561,280 @@ const models: HeartModel[] = [
       return [curve]
     },
   },
+  {
+    id: 'rose-cardioid-hybrid',
+    name: '玫瑰叠心',
+    formula: 'r = (1 - sin t)(1 + αsin(kt + ωτ)), C = (2cos t - cos2t, 2sin t - sin2t)',
+    defaults: {
+      alpha: 0.32,
+      k: 6,
+      blend: 0.34,
+      width: 1.34,
+      depth: 1.18,
+      omega: 1.15,
+    },
+    sliders: [
+      { key: 'alpha', label: '花瓣振幅 α', min: 0, max: 0.8, step: 0.01 },
+      { key: 'k', label: '花瓣频率 k', min: 2, max: 18, step: 0.1 },
+      { key: 'blend', label: '心线混合', min: 0, max: 1, step: 0.01 },
+      { key: 'width', label: '横向展开', min: 0.8, max: 2.2, step: 0.01 },
+      { key: 'depth', label: '纵向展开', min: 0.8, max: 2.2, step: 0.01 },
+      { key: 'omega', label: '开合速度', min: 0, max: 3.5, step: 0.05 },
+    ],
+    buildCurves: (params, time) => {
+      const alpha = clamp(params.alpha, 0, 0.8)
+      const k = clamp(params.k, 2, 18)
+      const blend = clamp(params.blend, 0, 1)
+      const width = clamp(params.width, 0.8, 2.2)
+      const depth = clamp(params.depth, 0.8, 2.2)
+      const omega = clamp(params.omega, 0, 3.5)
+      const curve = sampleRange(0, Math.PI * 2, 1900, (t) => {
+        const roseR = (1 - Math.sin(t)) * (1 + alpha * Math.sin(k * t + omega * time))
+        const roseX = width * roseR * Math.cos(t)
+        const roseY = depth * roseR * Math.sin(t)
+        const cardX = width * (2 * Math.cos(t) - Math.cos(2 * t))
+        const cardY = depth * (2 * Math.sin(t) - Math.sin(2 * t))
+        return {
+          x: roseX * (1 - blend) + cardX * blend,
+          y: roseY * (1 - blend) + cardY * blend,
+        }
+      })
+      return [curve]
+    },
+  },
+  {
+    id: 'dual-offset-heart',
+    name: '双层偏移心',
+    formula: 'Cₒ(t) + Cᵢ(t), Cᵢ = s·R(θ)Cₒ + Δ',
+    defaults: {
+      scale: 0.126,
+      innerScale: 0.72,
+      offsetX: 0.36,
+      offsetY: -0.22,
+      tilt: 0.12,
+      pulse: 0.16,
+    },
+    sliders: [
+      { key: 'scale', label: '外层尺度', min: 0.07, max: 0.22, step: 0.001 },
+      { key: 'innerScale', label: '内层比例', min: 0.35, max: 0.95, step: 0.01 },
+      { key: 'offsetX', label: '内层偏移 X', min: -1.2, max: 1.2, step: 0.01 },
+      { key: 'offsetY', label: '内层偏移 Y', min: -1.2, max: 1.2, step: 0.01 },
+      { key: 'tilt', label: '内层旋转', min: -0.7, max: 0.7, step: 0.01 },
+      { key: 'pulse', label: '呼吸幅度', min: 0, max: 0.5, step: 0.01 },
+    ],
+    buildCurves: (params, time) => {
+      const scale = clamp(params.scale, 0.07, 0.22)
+      const innerScale = clamp(params.innerScale, 0.35, 0.95)
+      const offsetX = clamp(params.offsetX, -1.2, 1.2)
+      const offsetY = clamp(params.offsetY, -1.2, 1.2)
+      const tilt = clamp(params.tilt, -0.7, 0.7)
+      const pulse = clamp(params.pulse, 0, 0.5)
+      const outer = sampleRange(0, Math.PI * 2, 1700, t => classicHeartPoint(t, scale))
+      const breath = 1 + pulse * Math.sin(time * 2.2)
+      const cosT = Math.cos(tilt)
+      const sinT = Math.sin(tilt)
+      const inner = sampleRange(0, Math.PI * 2, 1700, (t) => {
+        const base = classicHeartPoint(t, scale * innerScale * breath)
+        const rx = base.x * cosT - base.y * sinT
+        const ry = base.x * sinT + base.y * cosT
+        return {
+          x: rx + offsetX,
+          y: ry + offsetY,
+        }
+      })
+      return [outer, inner]
+    },
+  },
+  {
+    id: 'superellipse-morph',
+    name: '超椭圆压心',
+    formula: '|x/a|ⁿ + |y/b|ⁿ = 1 + morph',
+    defaults: {
+      a: 1.2,
+      b: 1.08,
+      n: 1.8,
+      morph: 0.52,
+      pinch: 0.78,
+      scale: 1.46,
+    },
+    sliders: [
+      { key: 'a', label: '横轴 a', min: 0.5, max: 2.2, step: 0.01 },
+      { key: 'b', label: '纵轴 b', min: 0.5, max: 2.2, step: 0.01 },
+      { key: 'n', label: '超椭圆 n', min: 0.5, max: 3.4, step: 0.01 },
+      { key: 'morph', label: '压心强度', min: 0, max: 1.2, step: 0.01 },
+      { key: 'pinch', label: '尖端收束', min: 0, max: 1.4, step: 0.01 },
+      { key: 'scale', label: '整体缩放', min: 0.7, max: 2.6, step: 0.01 },
+    ],
+    buildCurves: (params, time) => {
+      const a = clamp(params.a, 0.5, 2.2)
+      const b = clamp(params.b, 0.5, 2.2)
+      const n = clamp(params.n, 0.5, 3.4)
+      const morph = clamp(params.morph, 0, 1.2)
+      const pinch = clamp(params.pinch, 0, 1.4)
+      const scale = clamp(params.scale, 0.7, 2.6)
+      const pulse = 1 + 0.07 * Math.sin(time * 1.3)
+      const curve = sampleRange(0, Math.PI * 2, 1900, (theta) => {
+        const cx = Math.cos(theta)
+        const sy = Math.sin(theta)
+        const x0 = a * signPow(cx, 2 / n)
+        const y0 = b * signPow(sy, 2 / n)
+        const yHeart = y0 - morph * Math.abs(x0) ** 0.82 + 0.18 * morph * (1 - y0 * y0) - pinch * Math.abs(Math.sin(theta / 2)) ** 1.3
+        return {
+          x: x0 * scale * 1.8 * pulse,
+          y: yHeart * scale * 1.8 * pulse,
+        }
+      })
+      return [curve]
+    },
+  },
+  {
+    id: 'ifs-heart-fern',
+    name: '分形蕨心',
+    formula: 'IFS(Barnsley) → heart warp',
+    defaults: {
+      spread: 1.3,
+      sink: 0.9,
+      swirl: 0.22,
+      jitter: 0.12,
+      density: 2200,
+    },
+    sliders: [
+      { key: 'spread', label: '横向扩展', min: 0.6, max: 2.3, step: 0.01 },
+      { key: 'sink', label: '纵向下压', min: 0.2, max: 1.6, step: 0.01 },
+      { key: 'swirl', label: '旋纹强度', min: 0, max: 0.8, step: 0.01 },
+      { key: 'jitter', label: '生长抖动', min: 0, max: 0.35, step: 0.01 },
+      { key: 'density', label: '迭代密度', min: 800, max: 3600, step: 10 },
+    ],
+    buildCurves: (params, time) => {
+      const spread = clamp(params.spread, 0.6, 2.3)
+      const sink = clamp(params.sink, 0.2, 1.6)
+      const swirl = clamp(params.swirl, 0, 0.8)
+      const jitter = clamp(params.jitter, 0, 0.35)
+      const density = Math.floor(clamp(params.density, 800, 3600))
+      let x = 0
+      let y = 0
+      const points: Point[] = []
+      for (let i = 0; i < density; i += 1) {
+        const r = ((i * 9301 + 49297) % 233280) / 233280
+        let nx = 0
+        let ny = 0
+        if (r < 0.02) {
+          nx = 0
+          ny = 0.16 * y
+        }
+        else if (r < 0.84) {
+          nx = 0.85 * x + 0.04 * y
+          ny = -0.04 * x + 0.85 * y + 1.6
+        }
+        else if (r < 0.93) {
+          nx = 0.2 * x - 0.26 * y
+          ny = 0.23 * x + 0.22 * y + 1.6
+        }
+        else {
+          nx = -0.15 * x + 0.28 * y
+          ny = 0.26 * x + 0.24 * y + 0.44
+        }
+        x = nx
+        y = ny
+        const hx = spread * (x * 0.85 + swirl * Math.sin(3 * y + time))
+        const hy = y * 0.88 - sink * Math.abs(hx) ** 0.68 + jitter * Math.sin(time * 1.4 + i * 0.045)
+        points.push({ x: hx, y: hy })
+      }
+      return [points]
+    },
+  },
+  {
+    id: 'complex-map-heart',
+    name: '复映射液态心',
+    formula: 'z ↦ z + βz² + γz̅',
+    defaults: {
+      beta: 0.26,
+      gamma: 0.34,
+      cusp: 0.74,
+      twist: 0.22,
+      scale: 1.62,
+    },
+    sliders: [
+      { key: 'beta', label: '二次映射 β', min: -0.8, max: 0.8, step: 0.01 },
+      { key: 'gamma', label: '共轭映射 γ', min: -0.8, max: 0.8, step: 0.01 },
+      { key: 'cusp', label: '心尖收束', min: 0, max: 1.4, step: 0.01 },
+      { key: 'twist', label: '液态扰动', min: 0, max: 0.7, step: 0.01 },
+      { key: 'scale', label: '整体缩放', min: 0.7, max: 2.6, step: 0.01 },
+    ],
+    buildCurves: (params, time) => {
+      const beta = clamp(params.beta, -0.8, 0.8)
+      const gamma = clamp(params.gamma, -0.8, 0.8)
+      const cusp = clamp(params.cusp, 0, 1.4)
+      const twist = clamp(params.twist, 0, 0.7)
+      const scale = clamp(params.scale, 0.7, 2.6)
+      const curve = sampleRange(-Math.PI, Math.PI, 1800, (theta) => {
+        const ct = Math.cos(theta)
+        const st = Math.sin(theta)
+        const x1 = ct
+        const y1 = st
+        const x2 = Math.cos(2 * theta)
+        const y2 = Math.sin(2 * theta)
+        const zx = x1 + beta * x2 + gamma * x1
+        const zy = y1 + beta * y2 - gamma * y1
+        const fluid = twist * Math.sin(5 * theta + 1.6 * time)
+        const x = scale * (zx + fluid * zy) * 1.3
+        const y = scale * (zy - fluid * zx) * 1.3 - cusp * Math.abs(x) ** 0.72
+        return { x, y }
+      })
+      return [curve]
+    },
+  },
+  {
+    id: 'rd-masked-heart',
+    name: '反应扩散心域',
+    formula: 'RD mask on heart domain',
+    defaults: {
+      scale: 0.124,
+      amp: 0.2,
+      freq: 12,
+      diffusion: 0.5,
+      speed: 1.6,
+      layers: 9,
+    },
+    sliders: [
+      { key: 'scale', label: '基础尺度', min: 0.07, max: 0.2, step: 0.001 },
+      { key: 'amp', label: '扩散振幅', min: 0, max: 0.45, step: 0.01 },
+      { key: 'freq', label: '纹理频率', min: 2, max: 26, step: 0.1 },
+      { key: 'diffusion', label: '扩散强度', min: 0, max: 1, step: 0.01 },
+      { key: 'speed', label: '扩散速度', min: 0, max: 3, step: 0.05 },
+      { key: 'layers', label: '纹理层数', min: 3, max: 16, step: 1 },
+    ],
+    buildCurves: (params, time) => {
+      const scale = clamp(params.scale, 0.07, 0.2)
+      const amp = clamp(params.amp, 0, 0.45)
+      const freq = clamp(params.freq, 2, 26)
+      const diffusion = clamp(params.diffusion, 0, 1)
+      const speed = clamp(params.speed, 0, 3)
+      const layers = Math.floor(clamp(params.layers, 3, 16))
+      const curves: Point[][] = []
+      for (let layer = 0; layer < layers; layer += 1) {
+        const ratio = layer / Math.max(1, layers - 1)
+        const inset = 1 - ratio * (0.18 + 0.62 * diffusion)
+        const phase = layer * 0.8
+        const curve = sampleRange(0, Math.PI * 2, 1100, (t) => {
+          const base = classicHeartPoint(t, scale * inset)
+          const radial = Math.hypot(base.x, base.y) || 1
+          const nx = base.x / radial
+          const ny = base.y / radial
+          const noise = amp * (0.6 + 0.5 * ratio) * (
+            Math.sin(freq * t + speed * time + phase)
+            + 0.45 * Math.sin((freq * 0.63) * t - speed * 0.6 * time + phase * 1.3)
+          )
+          return {
+            x: base.x + nx * noise,
+            y: base.y + ny * noise,
+          }
+        })
+        curves.push(curve)
+      }
+      return curves
+    },
+  },
 ]
 
 const modelMap = new Map(models.map(model => [model.id, model]))
@@ -727,6 +1012,72 @@ const presets: Preset[] = [
     lineColor: '#f472ff',
     gradientFrom: '#f472ff',
     gradientTo: '#22d3ee',
+  },
+  {
+    id: 'rose-bloom-gala',
+    name: '玫瑰叠心舞会',
+    modelId: 'rose-cardioid-hybrid',
+    params: { alpha: 0.34, k: 6.2, blend: 0.36, width: 1.36, depth: 1.2, omega: 1.2 },
+    effects: { lineWidth: 2.7, glow: 0.64, trailLayers: 4, particles: 72, speed: 1.12 },
+    theme: 'coral-dusk',
+    lineColor: '#ff8fab',
+    gradientFrom: '#ff8fab',
+    gradientTo: '#fb7185',
+  },
+  {
+    id: 'guardian-heart',
+    name: '护心双影',
+    modelId: 'dual-offset-heart',
+    params: { scale: 0.126, innerScale: 0.72, offsetX: 0.34, offsetY: -0.2, tilt: 0.1, pulse: 0.16 },
+    effects: { lineWidth: 2.6, glow: 0.48, trailLayers: 3, particles: 54, speed: 1.06 },
+    theme: 'frost-mist',
+    lineColor: '#60a5fa',
+    gradientFrom: '#60a5fa',
+    gradientTo: '#93c5fd',
+  },
+  {
+    id: 'soft-metal-morph',
+    name: '软金属变心',
+    modelId: 'superellipse-morph',
+    params: { a: 1.22, b: 1.06, n: 1.86, morph: 0.5, pinch: 0.8, scale: 1.5 },
+    effects: { lineWidth: 2.75, glow: 0.54, trailLayers: 4, particles: 58, speed: 1.16 },
+    theme: 'metal-night',
+    lineColor: '#c7d2fe',
+    gradientFrom: '#c7d2fe',
+    gradientTo: '#93c5fd',
+  },
+  {
+    id: 'fractal-heart-bloom',
+    name: '分形心蕨',
+    modelId: 'ifs-heart-fern',
+    params: { spread: 1.36, sink: 0.92, swirl: 0.25, jitter: 0.09, density: 2400 },
+    effects: { lineWidth: 1.95, glow: 0.86, trailLayers: 2, particles: 40, speed: 0.94 },
+    theme: 'chalkboard',
+    lineColor: '#86efac',
+    gradientFrom: '#86efac',
+    gradientTo: '#4ade80',
+  },
+  {
+    id: 'liquid-lecture',
+    name: '液态映射',
+    modelId: 'complex-map-heart',
+    params: { beta: 0.24, gamma: 0.3, cusp: 0.72, twist: 0.2, scale: 1.58 },
+    effects: { lineWidth: 2.35, glow: 0.72, trailLayers: 4, particles: 68, speed: 1.3 },
+    theme: 'starlight',
+    lineColor: '#93c5fd',
+    gradientFrom: '#93c5fd',
+    gradientTo: '#a78bfa',
+  },
+  {
+    id: 'cellular-heartfield',
+    name: '细胞心域',
+    modelId: 'rd-masked-heart',
+    params: { scale: 0.124, amp: 0.22, freq: 11.8, diffusion: 0.54, speed: 1.68, layers: 9 },
+    effects: { lineWidth: 1.9, glow: 0.9, trailLayers: 3, particles: 42, speed: 1.1 },
+    theme: 'metal-night',
+    lineColor: '#67e8f9',
+    gradientFrom: '#67e8f9',
+    gradientTo: '#a5f3fc',
   },
 ]
 
