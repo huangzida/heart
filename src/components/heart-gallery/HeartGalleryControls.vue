@@ -38,14 +38,38 @@ const emit = defineEmits<{
 <template>
   <aside class="hg-panel">
     <div class="hg-panel-header">
-      <h2>心形函数艺术馆</h2>
+      <div class="hg-panel-title-wrap">
+        <p class="hg-panel-kicker">
+          HEART LAB
+        </p>
+        <h2>心形函数艺术馆</h2>
+      </div>
       <button
         type="button"
         class="hg-surprise"
         @click="emit('randomSurprise')"
       >
-        惊喜一下
+        随机灵感
       </button>
+    </div>
+
+    <div class="hg-meta-grid">
+      <div class="hg-meta-item">
+        <span>模型总数</span>
+        <strong>{{ models.length }}</strong>
+      </div>
+      <div class="hg-meta-item">
+        <span>预设总数</span>
+        <strong>{{ presets.length }}</strong>
+      </div>
+      <div class="hg-meta-item">
+        <span>当前模型</span>
+        <strong>{{ activeModel.name }}</strong>
+      </div>
+      <div class="hg-meta-item">
+        <span>自动切换</span>
+        <strong>{{ autoCruiseEnabled ? '开启' : '关闭' }}</strong>
+      </div>
     </div>
 
     <label class="hg-field">

@@ -436,11 +436,11 @@ const defaultEffects: EffectSettings = {
 }
 
 const themeOptions: ThemeOption[] = [
-  { id: 'classroom', label: '数学教室' },
-  { id: 'chalkboard', label: '黑板夜课' },
-  { id: 'paper-ink', label: '纸墨手稿' },
-  { id: 'starlight', label: '星夜流光' },
-  { id: 'neon', label: '霓虹脉冲' },
+  { id: 'classroom', label: '理性象牙' },
+  { id: 'chalkboard', label: '森林黑板' },
+  { id: 'paper-ink', label: '手稿暖光' },
+  { id: 'starlight', label: '深空绸缎' },
+  { id: 'neon', label: '赛博脉冲' },
 ]
 
 const presets: Preset[] = [
@@ -752,79 +752,80 @@ export function useHeartGallery(props: HeartGalleryResolvedProps): HeartGalleryS
   const stageTheme = computed(() => {
     if (activeTheme.value === 'chalkboard') {
       return {
-        panelBg: '#132215',
-        panelBorder: '#2f5f34',
-        panelText: '#e8f5db',
-        subtleText: '#a6cc9b',
-        stageBg: 'radial-gradient(circle at 22% 18%, #1f3b23 0%, #122014 46%, #0a140d 100%)',
-        gridColor: 'rgba(127, 184, 122, 0.22)',
-        axisColor: 'rgba(194, 238, 172, 0.75)',
-        formulaBg: 'rgba(16, 37, 19, 0.75)',
-        formulaText: '#e4f9d9',
-        controlBg: '#1a331d',
-        controlBorder: '#35693d',
+        panelBg: '#132a22',
+        panelBorder: '#376958',
+        panelText: '#f0ffea',
+        subtleText: '#abcebd',
+        stageBg: 'radial-gradient(circle at 18% 14%, #234537 0%, #172f27 48%, #101f1a 100%)',
+        gridColor: 'rgba(133, 201, 158, 0.24)',
+        axisColor: 'rgba(219, 255, 230, 0.72)',
+        formulaBg: 'rgba(15, 46, 35, 0.76)',
+        formulaText: '#f4ffed',
+        controlBg: '#1b3b31',
+        controlBorder: '#3b7462',
       }
     }
 
     if (activeTheme.value === 'paper-ink') {
       return {
-        panelBg: '#fff8ec',
-        panelBorder: '#ddcdb7',
-        panelText: '#332722',
-        subtleText: '#8d715d',
-        stageBg: 'linear-gradient(180deg, #fff9ef 0%, #f3e6d6 100%)',
-        gridColor: 'rgba(124, 88, 58, 0.2)',
-        axisColor: 'rgba(78, 49, 31, 0.7)',
-        formulaBg: 'rgba(255, 251, 242, 0.8)',
-        formulaText: '#34241c',
-        controlBg: '#fffdf8',
-        controlBorder: '#deccb2',
+        panelBg: '#fff8f0',
+        panelBorder: '#d8c4ac',
+        panelText: '#39281f',
+        subtleText: '#8c6f5a',
+        stageBg: 'linear-gradient(175deg, #fffaf2 0%, #f7ecdf 43%, #eedac7 100%)',
+        gridColor: 'rgba(149, 112, 76, 0.2)',
+        axisColor: 'rgba(95, 63, 40, 0.66)',
+        formulaBg: 'rgba(255, 248, 238, 0.84)',
+        formulaText: '#3f2a1f',
+        controlBg: '#fffdf9',
+        controlBorder: '#ddc7af',
       }
     }
 
     if (activeTheme.value === 'starlight') {
       return {
-        panelBg: '#111629',
-        panelBorder: '#2d3a67',
-        panelText: '#edf3ff',
-        subtleText: '#a2b3de',
-        stageBg: 'radial-gradient(circle at 24% 16%, #26305f 0%, #161d3f 42%, #0c122b 100%)',
-        gridColor: 'rgba(156, 176, 255, 0.2)',
-        axisColor: 'rgba(214, 227, 255, 0.72)',
-        formulaBg: 'rgba(15, 21, 46, 0.76)',
-        formulaText: '#f1f6ff',
-        controlBg: '#171f43',
-        controlBorder: '#33417a',
+        panelBg: '#121832',
+        panelBorder: '#3a4a87',
+        panelText: '#f0f4ff',
+        subtleText: '#a8b7e8',
+        stageBg: 'radial-gradient(circle at 22% 12%, #2e3b78 0%, #1b2451 45%, #101634 100%)',
+        gridColor: 'rgba(165, 185, 255, 0.24)',
+        axisColor: 'rgba(230, 238, 255, 0.76)',
+        formulaBg: 'rgba(18, 29, 68, 0.78)',
+        formulaText: '#f5f8ff',
+        controlBg: '#1b2859',
+        controlBorder: '#41529a',
       }
     }
 
     if (activeTheme.value === 'neon') {
       return {
-        panelBg: '#0b1022',
-        panelBorder: '#1f2a4a',
-        panelText: '#d7e3ff',
-        subtleText: '#9ab1e6',
-        stageBg: 'radial-gradient(circle at 20% 15%, #152449 0%, #0b1022 48%, #060a16 100%)',
-        gridColor: 'rgba(90, 138, 255, 0.24)',
-        axisColor: 'rgba(175, 214, 255, 0.72)',
-        formulaBg: 'rgba(9, 13, 28, 0.74)',
-        formulaText: '#e5efff',
-        controlBg: '#0f1733',
-        controlBorder: '#2a3b74',
+        panelBg: '#140f2d',
+        panelBorder: '#4d3c90',
+        panelText: '#f7edff',
+        subtleText: '#c4b4f0',
+        stageBg: 'radial-gradient(circle at 18% 15%, #3a2f78 0%, #271b57 44%, #171039 100%)',
+        gridColor: 'rgba(214, 112, 255, 0.24)',
+        axisColor: 'rgba(255, 180, 245, 0.7)',
+        formulaBg: 'rgba(29, 20, 62, 0.76)',
+        formulaText: '#fff0ff',
+        controlBg: '#261d4f',
+        controlBorder: '#5d48a6',
       }
     }
+
     return {
-      panelBg: '#f9f8f2',
-      panelBorder: '#ddd8ca',
-      panelText: '#1f2937',
-      subtleText: '#667085',
-      stageBg: 'linear-gradient(180deg, #fbfaf5 0%, #f4efe1 100%)',
-      gridColor: 'rgba(56, 99, 167, 0.22)',
-      axisColor: 'rgba(49, 83, 145, 0.66)',
+      panelBg: '#f6f2e9',
+      panelBorder: '#c9c2af',
+      panelText: '#283048',
+      subtleText: '#6f7892',
+      stageBg: 'linear-gradient(180deg, #f9f7f1 0%, #ece6d8 100%)',
+      gridColor: 'rgba(80, 105, 170, 0.22)',
+      axisColor: 'rgba(45, 69, 131, 0.67)',
       formulaBg: 'rgba(255, 255, 255, 0.78)',
-      formulaText: '#1e293b',
-      controlBg: '#ffffff',
-      controlBorder: '#d6deea',
+      formulaText: '#232e47',
+      controlBg: '#fffdfa',
+      controlBorder: '#cfd2de',
     }
   })
 
