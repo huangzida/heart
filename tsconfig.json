@@ -6,7 +6,7 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "paths": {
-      "starter-vue3": ["./src/index.ts"]
+      "heart": ["./src/index.ts"]
     },
     "resolveJsonModule": true,
     "types": ["node", "vitest/globals"],

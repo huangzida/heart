@@ -1,17 +1,17 @@
 {
-  "name": "starter-vue3",
+  "name": "heart",
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@10.25.0",
-  "description": "Vue 3 component library starter with Tailwind CSS and local preview",
+  "description": "Vue 3 heart math visualization component library",
   "author": "huangzida <398926656@qq.com>",
   "license": "MIT",
-  "homepage": "https://github.com/huangzida/starter-vue3#readme",
+  "homepage": "https://github.com/huangzida/heart#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/huangzida/starter-vue3.git"
+    "url": "git+https://github.com/huangzida/heart.git"
   },
-  "bugs": "https://github.com/huangzida/starter-vue3/issues",
+  "bugs": "https://github.com/huangzida/heart/issues",
   "keywords": [],
   "sideEffects": false,
   "exports": {

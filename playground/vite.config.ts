@@ -21,7 +21,7 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: 'starter-vue3',
+        find: 'heart',
         replacement: resolve(currentDir, '../dist/index.mjs'),
       },
       {

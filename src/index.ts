@@ -1,11 +1,11 @@
 import type { App } from 'vue'
-import HelloButton from './components/HelloButton.vue'
+import HeartGallery from './components/HeartGallery.vue'
 import './styles.css'
 
-export { HelloButton }
+export { HeartGallery }
 
 export default {
   install(app: App) {
-    app.component('HelloButton', HelloButton)
+    app.component('HeartGallery', HeartGallery)
   },
 }
