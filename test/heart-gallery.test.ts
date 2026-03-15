@@ -14,9 +14,10 @@ describe('heartGallery', () => {
     expect(wrapper.text()).toContain('心形函数艺术馆')
 
     const selects = wrapper.findAll('select')
-    expect(selects).toHaveLength(2)
+    expect(selects).toHaveLength(3)
     expect(selects[0].findAll('option').length).toBeGreaterThanOrEqual(10)
     expect(selects[1].findAll('option').length).toBeGreaterThanOrEqual(8)
+    expect(selects[2].findAll('option').length).toBeGreaterThanOrEqual(5)
 
     await selects[0].setValue('beating-heart')
     expect(wrapper.text()).toContain('呼吸心跳')

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { EffectSettings, HeartGalleryProps } from './heart-gallery/types'
+import type { EffectSettings, HeartGalleryProps, ThemeMode } from './heart-gallery/types'
 import HeartGalleryControls from './heart-gallery/HeartGalleryControls.vue'
 import HeartGalleryStage from './heart-gallery/HeartGalleryStage.vue'
 import { useHeartGallery } from './heart-gallery/useHeartGallery'
@@ -15,6 +15,7 @@ const props = withDefaults(defineProps<HeartGalleryProps>(), {
 })
 
 const {
+  activeTheme,
   activeModel,
   activeModelId,
   activePresetId,
@@ -40,6 +41,7 @@ const {
   showTrail,
   stagePathClass,
   stageTheme,
+  themeOptions,
   width,
   zeroX,
   zeroY,
@@ -56,6 +58,10 @@ function updateEffect(key: keyof EffectSettings, value: number): void {
 function handleUpdateEffect(key: string, value: number): void {
   updateEffect(key as keyof EffectSettings, value)
 }
+
+function updateTheme(value: ThemeMode): void {
+  activeTheme.value = value
+}
 </script>
 
 <template>
@@ -66,6 +72,8 @@ function handleUpdateEffect(key: string, value: number): void {
     <HeartGalleryControls
       :model-id="activeModelId"
       :preset-id="activePresetId"
+      :theme="activeTheme"
+      :theme-options="themeOptions"
       :models="models"
       :presets="presets"
       :active-model="activeModel"
@@ -78,6 +86,7 @@ function handleUpdateEffect(key: string, value: number): void {
       :auto-cruise-enabled="autoCruiseEnabled"
       @update-model-id="(value) => { activeModelId = value }"
       @update-preset-id="(value) => { activePresetId = value }"
+      @update-theme="updateTheme"
       @update-show-grid="(value) => { showGrid = value }"
       @update-show-axes="(value) => { showAxes = value }"
       @update-show-trail="(value) => { showTrail = value }"

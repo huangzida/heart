@@ -17,7 +17,13 @@ interface HeartGalleryResolvedProps {
   showFormula: boolean
 }
 
+interface ThemeOption {
+  id: ThemeMode
+  label: string
+}
+
 interface HeartGalleryState {
+  activeTheme: Ref<ThemeMode>
   activeModel: ComputedRef<HeartModel>
   activeModelId: Ref<string>
   activePresetId: Ref<string>
@@ -55,6 +61,7 @@ interface HeartGalleryState {
     controlBg: string
     controlBorder: string
   }>
+  themeOptions: ThemeOption[]
   width: number
   zeroX: ComputedRef<number>
   zeroY: ComputedRef<number>
@@ -428,6 +435,14 @@ const defaultEffects: EffectSettings = {
   gridDensity: 10,
 }
 
+const themeOptions: ThemeOption[] = [
+  { id: 'classroom', label: '数学教室' },
+  { id: 'chalkboard', label: '黑板夜课' },
+  { id: 'paper-ink', label: '纸墨手稿' },
+  { id: 'starlight', label: '星夜流光' },
+  { id: 'neon', label: '霓虹脉冲' },
+]
+
 const presets: Preset[] = [
   {
     id: 'chalk-classic',
@@ -735,6 +750,54 @@ export function useHeartGallery(props: HeartGalleryResolvedProps): HeartGalleryS
   const zeroY = computed(() => project({ x: 0, y: 0 }).y)
 
   const stageTheme = computed(() => {
+    if (activeTheme.value === 'chalkboard') {
+      return {
+        panelBg: '#132215',
+        panelBorder: '#2f5f34',
+        panelText: '#e8f5db',
+        subtleText: '#a6cc9b',
+        stageBg: 'radial-gradient(circle at 22% 18%, #1f3b23 0%, #122014 46%, #0a140d 100%)',
+        gridColor: 'rgba(127, 184, 122, 0.22)',
+        axisColor: 'rgba(194, 238, 172, 0.75)',
+        formulaBg: 'rgba(16, 37, 19, 0.75)',
+        formulaText: '#e4f9d9',
+        controlBg: '#1a331d',
+        controlBorder: '#35693d',
+      }
+    }
+
+    if (activeTheme.value === 'paper-ink') {
+      return {
+        panelBg: '#fff8ec',
+        panelBorder: '#ddcdb7',
+        panelText: '#332722',
+        subtleText: '#8d715d',
+        stageBg: 'linear-gradient(180deg, #fff9ef 0%, #f3e6d6 100%)',
+        gridColor: 'rgba(124, 88, 58, 0.2)',
+        axisColor: 'rgba(78, 49, 31, 0.7)',
+        formulaBg: 'rgba(255, 251, 242, 0.8)',
+        formulaText: '#34241c',
+        controlBg: '#fffdf8',
+        controlBorder: '#deccb2',
+      }
+    }
+
+    if (activeTheme.value === 'starlight') {
+      return {
+        panelBg: '#111629',
+        panelBorder: '#2d3a67',
+        panelText: '#edf3ff',
+        subtleText: '#a2b3de',
+        stageBg: 'radial-gradient(circle at 24% 16%, #26305f 0%, #161d3f 42%, #0c122b 100%)',
+        gridColor: 'rgba(156, 176, 255, 0.2)',
+        axisColor: 'rgba(214, 227, 255, 0.72)',
+        formulaBg: 'rgba(15, 21, 46, 0.76)',
+        formulaText: '#f1f6ff',
+        controlBg: '#171f43',
+        controlBorder: '#33417a',
+      }
+    }
+
     if (activeTheme.value === 'neon') {
       return {
         panelBg: '#0b1022',
@@ -860,6 +923,7 @@ export function useHeartGallery(props: HeartGalleryResolvedProps): HeartGalleryS
   })
 
   return {
+    activeTheme,
     activeModel,
     activeModelId,
     activePresetId,
@@ -884,6 +948,7 @@ export function useHeartGallery(props: HeartGalleryResolvedProps): HeartGalleryS
     showTrail,
     stagePathClass,
     stageTheme,
+    themeOptions,
     width: props.width,
     height: props.height,
     zeroX,

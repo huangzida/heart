@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import type { EffectSettings, HeartModel, Preset } from './types'
+import type { EffectSettings, HeartModel, Preset, ThemeMode } from './types'
 import EffectParamsPanel from './EffectParamsPanel.vue'
 import ModelParamsPanel from './ModelParamsPanel.vue'
 
 defineProps<{
   modelId: string
   presetId: string
+  theme: ThemeMode
+  themeOptions: Array<{ id: ThemeMode, label: string }>
   models: HeartModel[]
   presets: Preset[]
   activeModel: HeartModel
@@ -21,6 +23,7 @@ defineProps<{
 const emit = defineEmits<{
   updateModelId: [value: string]
   updatePresetId: [value: string]
+  updateTheme: [value: ThemeMode]
   updateShowGrid: [value: boolean]
   updateShowAxes: [value: boolean]
   updateShowTrail: [value: boolean]
@@ -75,6 +78,23 @@ const emit = defineEmits<{
           :value="preset.id"
         >
           {{ preset.name }}
+        </option>
+      </select>
+    </label>
+
+    <label class="hg-field">
+      <span class="hg-label">画布主题</span>
+      <select
+        :value="theme"
+        class="hg-select"
+        @change="emit('updateTheme', ($event.target as HTMLSelectElement).value as ThemeMode)"
+      >
+        <option
+          v-for="themeItem in themeOptions"
+          :key="themeItem.id"
+          :value="themeItem.id"
+        >
+          {{ themeItem.label }}
         </option>
       </select>
     </label>
