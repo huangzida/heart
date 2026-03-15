@@ -427,6 +427,129 @@ const models: HeartModel[] = [
       return [curve]
     },
   },
+  {
+    id: 'lissajous-pulse',
+    name: '李萨如心脉',
+    formula: 'x = sx(sin(3t+φ) + a·sin(9t+ωτ)), y = sy(1.18sin2t - b·sin(6t+ωτ))',
+    defaults: {
+      sx: 1.45,
+      sy: 1.35,
+      a: 0.32,
+      b: 0.28,
+      phase: 0.2,
+      omega: 1.6,
+    },
+    sliders: [
+      { key: 'sx', label: '横向缩放', min: 0.8, max: 2.2, step: 0.01 },
+      { key: 'sy', label: '纵向缩放', min: 0.8, max: 2.2, step: 0.01 },
+      { key: 'a', label: '高频横纹', min: 0, max: 0.7, step: 0.01 },
+      { key: 'b', label: '高频纵纹', min: 0, max: 0.7, step: 0.01 },
+      { key: 'phase', label: '相位 φ', min: -3.14, max: 3.14, step: 0.01 },
+      { key: 'omega', label: '颤动速度 ω', min: 0, max: 4, step: 0.05 },
+    ],
+    buildCurves: (params, time) => {
+      const sx = clamp(params.sx, 0.8, 2.2)
+      const sy = clamp(params.sy, 0.8, 2.2)
+      const a = clamp(params.a, 0, 0.7)
+      const b = clamp(params.b, 0, 0.7)
+      const phase = clamp(params.phase, -3.14, 3.14)
+      const omega = clamp(params.omega, 0, 4)
+      const curve = sampleRange(0, Math.PI * 2, 1900, (t) => {
+        return {
+          x: sx * (Math.sin(3 * t + phase) + a * Math.sin(9 * t + omega * time)),
+          y: sy * (1.18 * Math.sin(2 * t) - b * Math.sin(6 * t + omega * time)),
+        }
+      })
+      return [curve]
+    },
+  },
+  {
+    id: 'piecewise-fourier-heart',
+    name: '分段傅里叶心',
+    formula: 'x = 16s·sin³t, y = s·f(t) - q|sin(t/2)|^γ - c',
+    defaults: {
+      scale: 0.125,
+      p1: 1.02,
+      p2: 0.34,
+      q: 0.9,
+      gamma: 0.72,
+      cusp: 0.78,
+    },
+    sliders: [
+      { key: 'scale', label: '尺度', min: 0.07, max: 0.22, step: 0.001 },
+      { key: 'p1', label: '顶部圆润', min: 0.6, max: 1.6, step: 0.01 },
+      { key: 'p2', label: '顶部凹陷', min: 0.1, max: 0.8, step: 0.01 },
+      { key: 'q', label: '底部下垂', min: 0.2, max: 1.6, step: 0.01 },
+      { key: 'gamma', label: '尖锐指数', min: 0.45, max: 1.4, step: 0.01 },
+      { key: 'cusp', label: '尖端增强', min: 0, max: 1.4, step: 0.01 },
+    ],
+    buildCurves: (params) => {
+      const scale = clamp(params.scale, 0.07, 0.22)
+      const p1 = clamp(params.p1, 0.6, 1.6)
+      const p2 = clamp(params.p2, 0.1, 0.8)
+      const q = clamp(params.q, 0.2, 1.6)
+      const gamma = clamp(params.gamma, 0.45, 1.4)
+      const cusp = clamp(params.cusp, 0, 1.4)
+      const curve = sampleRange(0, Math.PI * 2, 2100, (t) => {
+        const x = scale * 16 * Math.sin(t) ** 3
+        const upper = scale * (p1 * Math.cos(t) - p2 * Math.cos(2 * t))
+        const lower = scale * (0.82 * p1 * Math.cos(t) - 0.52 * p2 * Math.cos(2 * t)) - q * Math.abs(Math.sin(t / 2)) ** gamma - cusp * 0.16
+        return {
+          x,
+          y: Math.sin(t) >= 0 ? upper : lower,
+        }
+      })
+      return [curve]
+    },
+  },
+  {
+    id: 'twisted-ribbon-heart',
+    name: '扭转丝带心',
+    formula: 'C′(t) = C(t) + n(t)·r·sin(kt+ωτ)',
+    defaults: {
+      scale: 0.122,
+      ribbon: 0.2,
+      k: 14,
+      omega: 1.8,
+      width: 1.35,
+      tilt: 0.08,
+    },
+    sliders: [
+      { key: 'scale', label: '基础尺度', min: 0.07, max: 0.2, step: 0.001 },
+      { key: 'ribbon', label: '丝带振幅', min: 0, max: 0.5, step: 0.01 },
+      { key: 'k', label: '丝带频率', min: 4, max: 36, step: 0.5 },
+      { key: 'omega', label: '扭转速度', min: 0, max: 4, step: 0.05 },
+      { key: 'width', label: '横向展开', min: 0.8, max: 2.2, step: 0.01 },
+      { key: 'tilt', label: '倾斜', min: -0.35, max: 0.35, step: 0.01 },
+    ],
+    buildCurves: (params, time) => {
+      const scale = clamp(params.scale, 0.07, 0.2)
+      const ribbon = clamp(params.ribbon, 0, 0.5)
+      const k = clamp(params.k, 4, 36)
+      const omega = clamp(params.omega, 0, 4)
+      const width = clamp(params.width, 0.8, 2.2)
+      const tilt = clamp(params.tilt, -0.35, 0.35)
+      const delta = 0.002
+      const curve = sampleRange(0, Math.PI * 2, 2300, (t) => {
+        const x0 = scale * 16 * Math.sin(t) ** 3
+        const y0 = scale * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))
+        const t1 = t + delta
+        const x1 = scale * 16 * Math.sin(t1) ** 3
+        const y1 = scale * (13 * Math.cos(t1) - 5 * Math.cos(2 * t1) - 2 * Math.cos(3 * t1) - Math.cos(4 * t1))
+        const tx = x1 - x0
+        const ty = y1 - y0
+        const len = Math.hypot(tx, ty) || 1
+        const nx = -ty / len
+        const ny = tx / len
+        const offset = ribbon * Math.sin(k * t + omega * time)
+        return {
+          x: width * x0 + nx * offset + tilt * y0,
+          y: y0 + ny * offset,
+        }
+      })
+      return [curve]
+    },
+  },
 ]
 
 const modelMap = new Map(models.map(model => [model.id, model]))
@@ -570,6 +693,39 @@ const presets: Preset[] = [
     theme: 'classroom',
     lineColor: '#f43f5e',
     gradientFrom: '#fb7185',
+    gradientTo: '#22d3ee',
+  },
+  {
+    id: 'pulse-lab',
+    name: '脉冲实验室',
+    modelId: 'lissajous-pulse',
+    params: { sx: 1.5, sy: 1.38, a: 0.34, b: 0.27, phase: 0.16, omega: 1.7 },
+    effects: { lineWidth: 2.7, glow: 0.6, trailLayers: 4, particles: 68, speed: 1.25 },
+    theme: 'metal-night',
+    lineColor: '#8be5ff',
+    gradientFrom: '#8be5ff',
+    gradientTo: '#7dd3fc',
+  },
+  {
+    id: 'sculpture-heart',
+    name: '雕塑心像',
+    modelId: 'piecewise-fourier-heart',
+    params: { scale: 0.126, p1: 1.06, p2: 0.31, q: 0.93, gamma: 0.68, cusp: 0.81 },
+    effects: { lineWidth: 2.8, glow: 0.5, trailLayers: 3, particles: 52, speed: 1.02 },
+    theme: 'coral-dusk',
+    lineColor: '#ff8eb6',
+    gradientFrom: '#ff8eb6',
+    gradientTo: '#fda4af',
+  },
+  {
+    id: 'twist-couture',
+    name: '丝带高定',
+    modelId: 'twisted-ribbon-heart',
+    params: { scale: 0.122, ribbon: 0.22, k: 16, omega: 1.95, width: 1.38, tilt: 0.07 },
+    effects: { lineWidth: 2.55, glow: 0.78, trailLayers: 5, particles: 74, speed: 1.34 },
+    theme: 'neon',
+    lineColor: '#f472ff',
+    gradientFrom: '#f472ff',
     gradientTo: '#22d3ee',
   },
 ]
