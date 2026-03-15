@@ -1,4 +1,4 @@
-export type ThemeMode = 'classroom' | 'neon' | 'chalkboard' | 'starlight' | 'paper-ink'
+export type ThemeMode = 'classroom' | 'neon' | 'chalkboard' | 'starlight' | 'paper-ink' | 'coral-dusk' | 'frost-mist' | 'metal-night'
 
 export interface Point {
   x: number

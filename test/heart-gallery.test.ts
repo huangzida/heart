@@ -17,7 +17,8 @@ describe('heartGallery', () => {
     expect(selects).toHaveLength(3)
     expect(selects[0].findAll('option').length).toBeGreaterThanOrEqual(10)
     expect(selects[1].findAll('option').length).toBeGreaterThanOrEqual(8)
-    expect(selects[2].findAll('option').length).toBeGreaterThanOrEqual(5)
+    expect(selects[2].findAll('option').length).toBeGreaterThanOrEqual(8)
+    expect(wrapper.findAll('.hg-cruise-pill')).toHaveLength(5)
 
     await selects[0].setValue('beating-heart')
     expect(wrapper.text()).toContain('呼吸心跳')

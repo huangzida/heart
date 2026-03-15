@@ -20,6 +20,8 @@ const {
   activeModelId,
   activePresetId,
   autoCruiseEnabled,
+  cruiseIntervalSeconds,
+  cruisePresetOptions,
   effects,
   flattenedTrailPaths,
   formulaVisible,
@@ -62,6 +64,10 @@ function handleUpdateEffect(key: string, value: number): void {
 function updateTheme(value: ThemeMode): void {
   activeTheme.value = value
 }
+
+function updateCruiseIntervalSeconds(value: number): void {
+  cruiseIntervalSeconds.value = value
+}
 </script>
 
 <template>
@@ -84,6 +90,8 @@ function updateTheme(value: ThemeMode): void {
       :show-trail="showTrail"
       :show-particles="showParticles"
       :auto-cruise-enabled="autoCruiseEnabled"
+      :cruise-interval-seconds="cruiseIntervalSeconds"
+      :cruise-preset-options="cruisePresetOptions"
       @update-model-id="(value) => { activeModelId = value }"
       @update-preset-id="(value) => { activePresetId = value }"
       @update-theme="updateTheme"
@@ -92,6 +100,7 @@ function updateTheme(value: ThemeMode): void {
       @update-show-trail="(value) => { showTrail = value }"
       @update-show-particles="(value) => { showParticles = value }"
       @update-auto-cruise-enabled="(value) => { autoCruiseEnabled = value }"
+      @update-cruise-interval-seconds="updateCruiseIntervalSeconds"
       @random-surprise="randomSurprise"
       @update-param="updateParam"
       @update-effect="handleUpdateEffect"

@@ -18,6 +18,8 @@ defineProps<{
   showTrail: boolean
   showParticles: boolean
   autoCruiseEnabled: boolean
+  cruiseIntervalSeconds: number
+  cruisePresetOptions: Array<{ label: string, seconds: number }>
 }>()
 
 const emit = defineEmits<{
@@ -29,6 +31,7 @@ const emit = defineEmits<{
   updateShowTrail: [value: boolean]
   updateShowParticles: [value: boolean]
   updateAutoCruiseEnabled: [value: boolean]
+  updateCruiseIntervalSeconds: [value: number]
   randomSurprise: []
   updateParam: [key: string, value: number]
   updateEffect: [key: string, value: number]
@@ -165,6 +168,37 @@ const emit = defineEmits<{
         <span>自动切换</span>
       </label>
     </div>
+
+    <section
+      class="hg-cruise-card"
+      :class="{ 'is-disabled': !autoCruiseEnabled }"
+    >
+      <div class="hg-cruise-header">
+        <span>自动切换间隔</span>
+        <strong>{{ cruiseIntervalSeconds.toFixed(1) }}s</strong>
+      </div>
+      <div class="hg-cruise-presets">
+        <button
+          v-for="preset in cruisePresetOptions"
+          :key="preset.label"
+          type="button"
+          class="hg-cruise-pill"
+          :class="{ 'is-active': Math.abs(preset.seconds - cruiseIntervalSeconds) < 0.26 }"
+          @click="emit('updateCruiseIntervalSeconds', preset.seconds)"
+        >
+          {{ preset.label }}
+        </button>
+      </div>
+      <input
+        :value="cruiseIntervalSeconds"
+        class="hg-slider hg-cruise-slider"
+        type="range"
+        min="2"
+        max="30"
+        step="0.5"
+        @input="emit('updateCruiseIntervalSeconds', Number(($event.target as HTMLInputElement).value))"
+      >
+    </section>
 
     <ModelParamsPanel
       :active-model="activeModel"

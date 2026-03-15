@@ -195,6 +195,68 @@
   transform: scale(1);
 }
 
+.hg-cruise-card {
+  border: 1px solid color-mix(in srgb, var(--hg-control-border) 74%, var(--hg-axis-color) 26%);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--hg-control-bg) 90%, transparent);
+  padding: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: opacity 160ms ease;
+}
+
+.hg-cruise-card.is-disabled {
+  opacity: 0.58;
+}
+
+.hg-cruise-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hg-subtle-text);
+  font-weight: 800;
+}
+
+.hg-cruise-header strong {
+  color: var(--hg-panel-text);
+  font-size: 13px;
+}
+
+.hg-cruise-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hg-cruise-pill {
+  border: 1px solid color-mix(in srgb, var(--hg-control-border) 66%, var(--hg-axis-color) 34%);
+  background: color-mix(in srgb, var(--hg-control-bg) 84%, transparent);
+  color: var(--hg-panel-text);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease;
+}
+
+.hg-cruise-pill:hover {
+  transform: translateY(-1px);
+}
+
+.hg-cruise-pill.is-active {
+  border-color: color-mix(in srgb, var(--hg-axis-color) 64%, var(--hg-control-border) 36%);
+  background: color-mix(in srgb, var(--hg-axis-color) 26%, var(--hg-control-bg) 74%);
+}
+
+.hg-cruise-slider {
+  margin-top: 2px;
+}
+
 .hg-section {
   border: 1px solid color-mix(in srgb, var(--hg-control-border) 74%, var(--hg-axis-color) 26%);
   background: color-mix(in srgb, var(--hg-control-bg) 90%, transparent);

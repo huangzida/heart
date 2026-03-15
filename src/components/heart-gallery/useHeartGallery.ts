@@ -22,12 +22,19 @@ interface ThemeOption {
   label: string
 }
 
+interface CruisePresetOption {
+  label: string
+  seconds: number
+}
+
 interface HeartGalleryState {
   activeTheme: Ref<ThemeMode>
   activeModel: ComputedRef<HeartModel>
   activeModelId: Ref<string>
   activePresetId: Ref<string>
   autoCruiseEnabled: Ref<boolean>
+  cruiseIntervalSeconds: Ref<number>
+  cruisePresetOptions: CruisePresetOption[]
   effects: EffectSettings
   flattenedTrailPaths: ComputedRef<Array<{ path: string, opacity: number, width: number }>>
   formulaVisible: ComputedRef<boolean>
@@ -440,7 +447,18 @@ const themeOptions: ThemeOption[] = [
   { id: 'chalkboard', label: '森林黑板' },
   { id: 'paper-ink', label: '手稿暖光' },
   { id: 'starlight', label: '深空绸缎' },
+  { id: 'coral-dusk', label: '暮色珊瑚' },
+  { id: 'frost-mist', label: '冰川晨雾' },
+  { id: 'metal-night', label: '金属夜航' },
   { id: 'neon', label: '赛博脉冲' },
+]
+
+const cruisePresetOptions: CruisePresetOption[] = [
+  { label: '3s', seconds: 3 },
+  { label: '5s', seconds: 5 },
+  { label: '8s', seconds: 8 },
+  { label: '12s', seconds: 12 },
+  { label: '20s', seconds: 20 },
 ]
 
 const presets: Preset[] = [
@@ -567,6 +585,7 @@ export function useHeartGallery(props: HeartGalleryResolvedProps): HeartGalleryS
   const showParticles = ref(true)
   const showTrail = ref(true)
   const autoCruiseEnabled = ref(props.autoCruise)
+  const cruiseIntervalSeconds = ref(8)
   const activeTheme = ref<ThemeMode>(props.theme)
   const lineColor = ref(presets[0].lineColor)
   const gradientFrom = ref(presets[0].gradientFrom)
@@ -798,6 +817,54 @@ export function useHeartGallery(props: HeartGalleryResolvedProps): HeartGalleryS
       }
     }
 
+    if (activeTheme.value === 'coral-dusk') {
+      return {
+        panelBg: '#2d1e2c',
+        panelBorder: '#7d4f77',
+        panelText: '#ffeef7',
+        subtleText: '#e5b8d1',
+        stageBg: 'radial-gradient(circle at 18% 16%, #7f4a67 0%, #59324f 44%, #2e1f33 100%)',
+        gridColor: 'rgba(255, 167, 201, 0.22)',
+        axisColor: 'rgba(255, 219, 235, 0.72)',
+        formulaBg: 'rgba(66, 37, 60, 0.78)',
+        formulaText: '#fff0f8',
+        controlBg: '#4a2b44',
+        controlBorder: '#925c8a',
+      }
+    }
+
+    if (activeTheme.value === 'frost-mist') {
+      return {
+        panelBg: '#e9f5ff',
+        panelBorder: '#9fc2de',
+        panelText: '#123049',
+        subtleText: '#5d819d',
+        stageBg: 'linear-gradient(170deg, #f4fbff 0%, #dceffd 46%, #c5dff3 100%)',
+        gridColor: 'rgba(88, 132, 169, 0.21)',
+        axisColor: 'rgba(50, 92, 133, 0.67)',
+        formulaBg: 'rgba(246, 252, 255, 0.84)',
+        formulaText: '#17334c',
+        controlBg: '#f8fcff',
+        controlBorder: '#a5c7df',
+      }
+    }
+
+    if (activeTheme.value === 'metal-night') {
+      return {
+        panelBg: '#1d232d',
+        panelBorder: '#49566a',
+        panelText: '#edf3fb',
+        subtleText: '#a7b5c8',
+        stageBg: 'radial-gradient(circle at 20% 14%, #434f61 0%, #2d3644 46%, #1a2029 100%)',
+        gridColor: 'rgba(162, 182, 208, 0.2)',
+        axisColor: 'rgba(226, 235, 246, 0.7)',
+        formulaBg: 'rgba(34, 43, 55, 0.78)',
+        formulaText: '#f1f6ff',
+        controlBg: '#283240',
+        controlBorder: '#596a82',
+      }
+    }
+
     if (activeTheme.value === 'neon') {
       return {
         panelBg: '#140f2d',
@@ -875,7 +942,7 @@ export function useHeartGallery(props: HeartGalleryResolvedProps): HeartGalleryS
       const index = presets.findIndex(item => item.id === activePresetId.value)
       const next = presets[(index + 1) % presets.length]
       applyPreset(next.id)
-    }, 7600)
+    }, Math.round(cruiseIntervalSeconds.value * 1000))
   }
 
   function stopCruise(): void {
@@ -903,6 +970,12 @@ export function useHeartGallery(props: HeartGalleryResolvedProps): HeartGalleryS
     }
   }, { immediate: true })
 
+  watch(cruiseIntervalSeconds, () => {
+    if (autoCruiseEnabled.value) {
+      startCruise()
+    }
+  })
+
   watch(() => effects.speed, () => {
     if (props.animated) {
       startAnimation()
@@ -929,6 +1002,8 @@ export function useHeartGallery(props: HeartGalleryResolvedProps): HeartGalleryS
     activeModelId,
     activePresetId,
     autoCruiseEnabled,
+    cruiseIntervalSeconds,
+    cruisePresetOptions,
     effects,
     flattenedTrailPaths,
     formulaVisible,

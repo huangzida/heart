@@ -82,9 +82,9 @@ const emit = defineEmits<{
         :value="effects.speed"
         class="hg-slider"
         type="range"
-        min="0.2"
-        max="2.4"
-        step="0.01"
+        min="0.0"
+        max="3"
+        step="0.1"
         @input="emit('updateEffect', 'speed', Number(($event.target as HTMLInputElement).value))"
       >
     </div>
