@@ -1,66 +1,11 @@
 import type { ComputedRef, Ref } from 'vue'
+import type { EffectSettings, HeartModel, Point, Preset, ThemeMode } from './types'
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
-
-export type ThemeMode = 'classroom' | 'neon'
-
-interface Point {
-  x: number
-  y: number
-}
-
-interface SliderDef {
-  key: string
-  label: string
-  min: number
-  max: number
-  step: number
-}
-
-interface HeartModel {
-  id: string
-  name: string
-  formula: string
-  defaults: Record<string, number>
-  sliders: SliderDef[]
-  buildCurves: (params: Record<string, number>, time: number) => Point[][]
-}
-
-interface EffectSettings {
-  lineWidth: number
-  glow: number
-  trailLayers: number
-  trailGap: number
-  particles: number
-  particleSize: number
-  speed: number
-  gridDensity: number
-}
-
-interface Preset {
-  id: string
-  name: string
-  modelId: string
-  params: Record<string, number>
-  effects: Partial<EffectSettings>
-  theme: ThemeMode
-  lineColor: string
-  gradientFrom: string
-  gradientTo: string
-}
 
 interface TrailLayer {
   opacity: number
   width: number
   paths: string[]
-}
-
-export interface HeartGalleryProps {
-  width?: number
-  height?: number
-  theme?: ThemeMode
-  animated?: boolean
-  autoCruise?: boolean
-  showFormula?: boolean
 }
 
 interface HeartGalleryResolvedProps {
