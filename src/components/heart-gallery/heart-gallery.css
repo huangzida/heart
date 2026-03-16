@@ -1,23 +1,35 @@
 .hg-shell {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(300px, 350px) minmax(0, 1fr);
-  gap: 18px;
+  grid-template-columns: minmax(304px, 362px) minmax(0, 1fr);
+  gap: 20px;
   width: min(100%, 1320px);
   color: var(--hg-panel-text);
 }
 
-.hg-shell::before {
+.hg-shell::before,
+.hg-shell::after {
   content: '';
   position: absolute;
-  inset: -18px;
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at 12% 10%, color-mix(in srgb, var(--hg-axis-color) 28%, transparent) 0%, transparent 45%),
-    radial-gradient(circle at 88% 86%, color-mix(in srgb, var(--hg-grid-color) 42%, transparent) 0%, transparent 48%);
-  opacity: 0.6;
   pointer-events: none;
   z-index: 0;
+}
+
+.hg-shell::before {
+  inset: -22px;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 12% 14%, color-mix(in srgb, var(--hg-axis-color) 34%, transparent) 0%, transparent 54%),
+    radial-gradient(circle at 84% 86%, color-mix(in srgb, var(--hg-grid-color) 36%, transparent) 0%, transparent 56%);
+  filter: blur(18px);
+  opacity: 0.82;
+}
+
+.hg-shell::after {
+  inset: -8px;
+  border-radius: 30px;
+  border: 1px solid color-mix(in srgb, var(--hg-panel-border) 70%, white 30%);
+  opacity: 0.44;
 }
 
 .hg-panel,
@@ -27,20 +39,22 @@
 }
 
 .hg-panel {
-  border: 1px solid var(--hg-panel-border);
-  border-radius: 24px;
+  border: 1px solid color-mix(in srgb, var(--hg-panel-border) 62%, white 38%);
+  border-radius: 28px;
   background:
-    linear-gradient(170deg, color-mix(in srgb, var(--hg-panel-bg) 90%, white 10%) 0%, var(--hg-panel-bg) 48%, color-mix(in srgb, var(--hg-panel-bg) 92%, black 8%) 100%);
+    linear-gradient(138deg, color-mix(in srgb, var(--hg-panel-bg) 60%, white 40%) 0%, color-mix(in srgb, var(--hg-panel-bg) 86%, transparent) 42%, color-mix(in srgb, var(--hg-panel-bg) 88%, black 12%) 100%);
   padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   min-height: 620px;
   max-height: 620px;
   overflow: auto;
+  backdrop-filter: blur(24px) saturate(134%);
   box-shadow:
-    0 22px 45px color-mix(in srgb, var(--hg-axis-color) 22%, transparent),
-    inset 0 1px 0 color-mix(in srgb, var(--hg-panel-text) 12%, transparent);
+    inset 0 1px 0 color-mix(in srgb, white 32%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--hg-axis-color) 26%, transparent),
+    0 24px 52px color-mix(in srgb, var(--hg-axis-color) 26%, transparent);
 }
 
 .hg-panel-header {
@@ -53,41 +67,51 @@
 .hg-panel-title-wrap {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
 }
 
 .hg-panel-kicker {
   margin: 0;
-  letter-spacing: 0.2em;
-  font-size: 11px;
+  letter-spacing: 0.22em;
+  font-size: 10px;
   font-weight: 700;
-  color: var(--hg-subtle-text);
+  color: color-mix(in srgb, var(--hg-subtle-text) 85%, white 15%);
 }
 
 .hg-panel-header h2 {
   margin: 0;
-  font-size: 20px;
-  line-height: 1.1;
+  font-size: 23px;
+  line-height: 1.04;
   font-weight: 800;
   text-wrap: balance;
 }
 
+.hg-panel-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--hg-subtle-text) 92%, white 8%);
+  max-width: 28ch;
+}
+
 .hg-surprise {
-  border: 1px solid color-mix(in srgb, var(--hg-axis-color) 45%, var(--hg-control-border) 55%);
-  background: linear-gradient(120deg, color-mix(in srgb, var(--hg-control-bg) 80%, var(--hg-axis-color) 20%) 0%, var(--hg-control-bg) 100%);
+  border: 1px solid color-mix(in srgb, var(--hg-axis-color) 58%, white 42%);
+  background:
+    linear-gradient(128deg, color-mix(in srgb, var(--hg-axis-color) 34%, white 66%) 0%, color-mix(in srgb, var(--hg-control-bg) 84%, transparent) 100%);
   color: var(--hg-panel-text);
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   padding: 8px 14px;
   cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
 }
 
 .hg-surprise:hover {
-  transform: translateY(-1px) scale(1.02);
-  box-shadow: 0 8px 18px color-mix(in srgb, var(--hg-axis-color) 34%, transparent);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 25px color-mix(in srgb, var(--hg-axis-color) 42%, transparent);
+  filter: brightness(1.06);
 }
 
 .hg-meta-grid {
@@ -97,17 +121,32 @@
 }
 
 .hg-meta-item {
-  border: 1px solid color-mix(in srgb, var(--hg-control-border) 74%, var(--hg-axis-color) 26%);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--hg-control-bg) 86%, transparent);
-  padding: 8px 9px;
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--hg-control-border) 62%, white 38%);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--hg-control-bg) 68%, white 32%);
+  padding: 9px 10px 9px 12px;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  backdrop-filter: blur(14px);
+}
+
+.hg-meta-dot {
+  position: absolute;
+  right: 9px;
+  top: 9px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--hg-axis-color) 72%, white 28%);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--hg-axis-color) 56%, transparent);
 }
 
 .hg-meta-item span {
-  font-size: 11px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--hg-subtle-text);
 }
 
@@ -119,6 +158,16 @@
   white-space: nowrap;
 }
 
+.hg-control-block {
+  border: 1px solid color-mix(in srgb, var(--hg-control-border) 58%, white 42%);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--hg-control-bg) 66%, white 34%);
+  backdrop-filter: blur(14px);
+  padding: 12px;
+  display: grid;
+  gap: 11px;
+}
+
 .hg-field {
   display: flex;
   flex-direction: column;
@@ -126,38 +175,37 @@
 }
 
 .hg-label {
-  font-size: 11px;
-  letter-spacing: 0.08em;
+  font-size: 10px;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--hg-subtle-text);
   font-weight: 700;
 }
 
 .hg-select {
-  border: 1px solid color-mix(in srgb, var(--hg-control-border) 72%, var(--hg-axis-color) 28%);
-  background: color-mix(in srgb, var(--hg-control-bg) 90%, var(--hg-stage-bg) 10%);
+  border: 1px solid color-mix(in srgb, var(--hg-control-border) 52%, white 48%);
+  background:
+    linear-gradient(156deg, color-mix(in srgb, var(--hg-control-bg) 64%, white 36%) 0%, color-mix(in srgb, var(--hg-control-bg) 94%, transparent) 100%);
   color: var(--hg-panel-text);
-  border-radius: 12px;
+  border-radius: 13px;
   padding: 10px 12px;
   font-size: 13px;
   font-weight: 600;
   outline: none;
-  transition: border-color 160ms ease, box-shadow 160ms ease;
+  backdrop-filter: blur(10px);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .hg-select:focus {
-  border-color: color-mix(in srgb, var(--hg-axis-color) 60%, var(--hg-control-border) 40%);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--hg-axis-color) 22%, transparent);
+  border-color: color-mix(in srgb, var(--hg-axis-color) 76%, white 24%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--hg-axis-color) 24%, transparent);
+  transform: translateY(-1px);
 }
 
 .hg-toggle-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
-  padding: 10px;
-  border-radius: 14px;
-  border: 1px solid color-mix(in srgb, var(--hg-control-border) 74%, var(--hg-axis-color) 26%);
-  background: color-mix(in srgb, var(--hg-control-bg) 88%, transparent);
+  gap: 10px;
 }
 
 .hg-toggle {
@@ -167,18 +215,22 @@
   font-size: 12px;
   color: var(--hg-panel-text);
   font-weight: 600;
+  border-radius: 12px;
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--hg-control-border) 60%, white 40%);
+  background: color-mix(in srgb, var(--hg-control-bg) 70%, white 30%);
 }
 
 .hg-toggle input[type='checkbox'] {
   appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  border: 1px solid color-mix(in srgb, var(--hg-control-border) 65%, var(--hg-axis-color) 35%);
-  background: color-mix(in srgb, var(--hg-control-bg) 70%, transparent);
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  border: 1px solid color-mix(in srgb, var(--hg-control-border) 48%, white 52%);
+  background: color-mix(in srgb, var(--hg-control-bg) 58%, white 42%);
   display: inline-grid;
   place-content: center;
-  transition: background-color 140ms ease, border-color 140ms ease;
+  transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
 }
 
 .hg-toggle input[type='checkbox']::before {
@@ -188,7 +240,12 @@
   border-radius: 2px;
   transform: scale(0);
   transition: transform 140ms ease;
-  background: color-mix(in srgb, var(--hg-axis-color) 72%, white 28%);
+  background: color-mix(in srgb, var(--hg-axis-color) 66%, white 34%);
+}
+
+.hg-toggle input[type='checkbox']:checked {
+  border-color: color-mix(in srgb, var(--hg-axis-color) 64%, white 36%);
+  transform: scale(1.04);
 }
 
 .hg-toggle input[type='checkbox']:checked::before {
@@ -196,29 +253,30 @@
 }
 
 .hg-cruise-card {
-  border: 1px solid color-mix(in srgb, var(--hg-control-border) 74%, var(--hg-axis-color) 26%);
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--hg-control-bg) 90%, transparent);
-  padding: 11px;
+  border: 1px solid color-mix(in srgb, var(--hg-control-border) 58%, white 42%);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--hg-control-bg) 66%, white 34%);
+  padding: 13px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  backdrop-filter: blur(12px);
   transition: opacity 160ms ease;
 }
 
 .hg-cruise-card.is-disabled {
-  opacity: 0.58;
+  opacity: 0.5;
 }
 
 .hg-cruise-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 12px;
-  letter-spacing: 0.08em;
+  font-size: 11px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--hg-subtle-text);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .hg-cruise-header strong {
@@ -233,15 +291,15 @@
 }
 
 .hg-cruise-pill {
-  border: 1px solid color-mix(in srgb, var(--hg-control-border) 66%, var(--hg-axis-color) 34%);
-  background: color-mix(in srgb, var(--hg-control-bg) 84%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hg-control-border) 58%, white 42%);
+  background: color-mix(in srgb, var(--hg-control-bg) 64%, white 36%);
   color: var(--hg-panel-text);
   border-radius: 999px;
   padding: 4px 10px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease;
+  transition: transform 130ms ease, background-color 130ms ease, border-color 130ms ease;
 }
 
 .hg-cruise-pill:hover {
@@ -249,8 +307,8 @@
 }
 
 .hg-cruise-pill.is-active {
-  border-color: color-mix(in srgb, var(--hg-axis-color) 64%, var(--hg-control-border) 36%);
-  background: color-mix(in srgb, var(--hg-axis-color) 26%, var(--hg-control-bg) 74%);
+  border-color: color-mix(in srgb, var(--hg-axis-color) 70%, white 30%);
+  background: color-mix(in srgb, var(--hg-axis-color) 34%, var(--hg-control-bg) 66%);
 }
 
 .hg-cruise-slider {
@@ -258,19 +316,20 @@
 }
 
 .hg-section {
-  border: 1px solid color-mix(in srgb, var(--hg-control-border) 74%, var(--hg-axis-color) 26%);
-  background: color-mix(in srgb, var(--hg-control-bg) 90%, transparent);
-  border-radius: 14px;
-  padding: 11px;
+  border: 1px solid color-mix(in srgb, var(--hg-control-border) 58%, white 42%);
+  background: color-mix(in srgb, var(--hg-control-bg) 68%, white 32%);
+  border-radius: 18px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 10px;
+  backdrop-filter: blur(12px);
 }
 
 .hg-section h3 {
   margin: 0;
-  font-size: 12px;
-  letter-spacing: 0.09em;
+  font-size: 11px;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--hg-subtle-text);
   font-weight: 800;
@@ -279,7 +338,7 @@
 .hg-slider-row {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 .hg-slider-top {
@@ -297,65 +356,122 @@
 .hg-slider {
   width: 100%;
   appearance: none;
-  height: 5px;
+  height: 6px;
   border-radius: 999px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--hg-axis-color) 50%, transparent) 0%, color-mix(in srgb, var(--hg-grid-color) 60%, transparent) 100%);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--hg-axis-color) 54%, white 46%) 0%, color-mix(in srgb, var(--hg-grid-color) 56%, white 44%) 100%);
 }
 
 .hg-slider::-webkit-slider-thumb {
   appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--hg-panel-border) 70%, var(--hg-axis-color) 30%);
-  background: color-mix(in srgb, var(--hg-control-bg) 50%, white 50%);
-  box-shadow: 0 4px 10px color-mix(in srgb, var(--hg-axis-color) 42%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hg-panel-border) 56%, white 44%);
+  background: color-mix(in srgb, var(--hg-control-bg) 40%, white 60%);
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--hg-axis-color) 44%, transparent);
 }
 
 .hg-stage {
+  --hg-pointer-x: 50%;
+  --hg-pointer-y: 50%;
+  --hg-shift-x: 0px;
+  --hg-shift-y: 0px;
   position: relative;
-  border-radius: 26px;
+  border-radius: 30px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--hg-panel-border) 72%, var(--hg-axis-color) 28%);
-  background: var(--hg-stage-bg);
+  border: 1px solid color-mix(in srgb, var(--hg-panel-border) 56%, white 44%);
+  background:
+    linear-gradient(130deg, color-mix(in srgb, var(--hg-stage-bg) 60%, white 40%) 0%, color-mix(in srgb, var(--hg-stage-bg) 96%, black 4%) 100%);
+  backdrop-filter: blur(8px);
   box-shadow:
-    0 30px 56px color-mix(in srgb, var(--hg-axis-color) 22%, transparent),
-    inset 0 0 0 1px color-mix(in srgb, var(--hg-formula-bg) 20%, white 80%);
+    inset 0 1px 0 color-mix(in srgb, white 30%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--hg-axis-color) 22%, transparent),
+    0 28px 60px color-mix(in srgb, var(--hg-axis-color) 24%, transparent);
 }
 
+.hg-stage::before,
 .hg-stage::after {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--hg-axis-color) 20%, transparent) 0%, transparent 42%),
-    linear-gradient(135deg, color-mix(in srgb, var(--hg-grid-color) 6%, transparent) 0%, transparent 60%);
   pointer-events: none;
+}
+
+.hg-stage::before {
+  background:
+    radial-gradient(260px 220px at var(--hg-pointer-x) var(--hg-pointer-y), color-mix(in srgb, white 24%, transparent) 0%, transparent 72%);
+  mix-blend-mode: screen;
+  opacity: 0.75;
+}
+
+.hg-stage::after {
+  background:
+    linear-gradient(118deg, color-mix(in srgb, white 18%, transparent) 0%, transparent 32% 70%, color-mix(in srgb, var(--hg-axis-color) 14%, transparent) 100%);
+}
+
+.hg-stage-caustic,
+.hg-stage-specular,
+.hg-stage-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hg-stage-caustic {
+  background:
+    radial-gradient(380px 260px at calc(var(--hg-pointer-x) + 6%) calc(var(--hg-pointer-y) - 4%), color-mix(in srgb, var(--hg-axis-color) 28%, transparent) 0%, transparent 72%),
+    radial-gradient(420px 300px at calc(var(--hg-pointer-x) - 11%) calc(var(--hg-pointer-y) + 10%), color-mix(in srgb, var(--hg-grid-color) 24%, transparent) 0%, transparent 72%);
+  mix-blend-mode: screen;
+  opacity: 0.8;
+  filter: blur(10px);
+  transform: translate3d(var(--hg-shift-x), var(--hg-shift-y), 0);
+  transition: transform 180ms ease-out;
+}
+
+.hg-stage-specular {
+  background:
+    linear-gradient(118deg, transparent 8%, color-mix(in srgb, white 20%, transparent) 23%, transparent 40% 58%, color-mix(in srgb, white 14%, transparent) 76%, transparent 92%);
+  opacity: 0.9;
+  transform: translate3d(calc(var(--hg-shift-x) * -0.6), calc(var(--hg-shift-y) * -0.55), 0);
+  transition: transform 180ms ease-out;
+}
+
+.hg-stage-vignette {
+  background:
+    radial-gradient(circle at 50% 52%, transparent 54%, color-mix(in srgb, #041021 58%, transparent) 100%);
+  opacity: 0.46;
 }
 
 .hg-svg {
   display: block;
   max-width: 100%;
   height: auto;
+  position: relative;
+  z-index: 2;
+  transform: translate3d(calc(var(--hg-shift-x) * 0.38), calc(var(--hg-shift-y) * 0.34), 0);
+  transition: transform 180ms ease-out;
 }
 
 .hg-formula {
   position: absolute;
   left: 18px;
   top: 18px;
-  background: var(--hg-formula-bg);
-  border: 1px solid color-mix(in srgb, var(--hg-panel-border) 72%, var(--hg-axis-color) 28%);
+  z-index: 3;
+  background:
+    linear-gradient(142deg, color-mix(in srgb, var(--hg-formula-bg) 70%, white 30%) 0%, color-mix(in srgb, var(--hg-formula-bg) 96%, transparent) 100%);
+  border: 1px solid color-mix(in srgb, var(--hg-panel-border) 54%, white 46%);
   border-radius: 14px;
   padding: 10px 12px;
   color: var(--hg-formula-text);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 10px 22px color-mix(in srgb, var(--hg-axis-color) 18%, transparent);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 26px color-mix(in srgb, var(--hg-axis-color) 24%, transparent);
 }
 
 .hg-formula p {
   margin: 0 0 4px;
-  font-size: 12px;
-  letter-spacing: 0.07em;
+  font-size: 11px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   font-weight: 700;
 }
@@ -366,7 +482,7 @@
 }
 
 .is-animated {
-  animation: hg-draw 5.6s cubic-bezier(0.68, -0.18, 0.32, 1.18) infinite;
+  animation: hg-draw 5s cubic-bezier(0.66, -0.12, 0.32, 1.14) infinite;
 }
 
 @keyframes hg-draw {
@@ -374,13 +490,13 @@
     stroke-dasharray: 1 1000;
     stroke-dashoffset: 0;
   }
-  50% {
+  52% {
     stroke-dasharray: 420 580;
-    stroke-dashoffset: -80;
+    stroke-dashoffset: -88;
   }
   100% {
     stroke-dasharray: 1 1000;
-    stroke-dashoffset: -920;
+    stroke-dashoffset: -940;
   }
 }
 

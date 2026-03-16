@@ -851,6 +851,7 @@ const defaultEffects: EffectSettings = {
 }
 
 const themeOptions: ThemeOption[] = [
+  { id: 'liquid-glass', label: '液态折射' },
   { id: 'classroom', label: '理性象牙' },
   { id: 'chalkboard', label: '森林黑板' },
   { id: 'paper-ink', label: '手稿暖光' },
@@ -876,7 +877,7 @@ const presets: Preset[] = [
     modelId: 'classic-pair',
     params: { a: 0.6, b: 1.04, sx: 1.6, sy: 1.6 },
     effects: { lineWidth: 2.5, glow: 0.24, trailLayers: 2, particles: 16, speed: 0.8 },
-    theme: 'classroom',
+    theme: 'liquid-glass',
     lineColor: '#ff5ea3',
     gradientFrom: '#ff5ea3',
     gradientTo: '#4f7cff',
@@ -1276,6 +1277,22 @@ export function useHeartGallery(props: HeartGalleryResolvedProps): HeartGalleryS
   const zeroY = computed(() => project({ x: 0, y: 0 }).y)
 
   const stageTheme = computed(() => {
+    if (activeTheme.value === 'liquid-glass') {
+      return {
+        panelBg: '#111a34',
+        panelBorder: '#6f98cb',
+        panelText: '#edf7ff',
+        subtleText: '#a7c0dd',
+        stageBg: 'radial-gradient(circle at 14% 12%, #5476ae 0%, #2c3d77 38%, #171f42 68%, #111733 100%)',
+        gridColor: 'rgba(155, 201, 255, 0.2)',
+        axisColor: 'rgba(231, 247, 255, 0.74)',
+        formulaBg: 'rgba(21, 36, 72, 0.7)',
+        formulaText: '#f3faff',
+        controlBg: '#203462',
+        controlBorder: '#6b93c8',
+      }
+    }
+
     if (activeTheme.value === 'chalkboard') {
       return {
         panelBg: '#132a22',

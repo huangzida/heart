@@ -43,131 +43,142 @@ const emit = defineEmits<{
     <div class="hg-panel-header">
       <div class="hg-panel-title-wrap">
         <p class="hg-panel-kicker">
-          HEART LAB
+          LIQUID CONTROL DECK
         </p>
-        <h2>心形函数艺术馆</h2>
+        <h2>液态参数中枢</h2>
+        <p class="hg-panel-subtitle">
+          折射、流动、极简，三种维度共同塑造你的心形宇宙。
+        </p>
       </div>
       <button
         type="button"
         class="hg-surprise"
         @click="emit('randomSurprise')"
       >
-        随机灵感
+        惊喜生成
       </button>
     </div>
 
     <div class="hg-meta-grid">
       <div class="hg-meta-item">
+        <i class="hg-meta-dot" />
         <span>模型总数</span>
         <strong>{{ models.length }}</strong>
       </div>
       <div class="hg-meta-item">
+        <i class="hg-meta-dot" />
         <span>预设总数</span>
         <strong>{{ presets.length }}</strong>
       </div>
       <div class="hg-meta-item">
+        <i class="hg-meta-dot" />
         <span>当前模型</span>
         <strong>{{ activeModel.name }}</strong>
       </div>
       <div class="hg-meta-item">
+        <i class="hg-meta-dot" />
         <span>自动切换</span>
         <strong>{{ autoCruiseEnabled ? '开启' : '关闭' }}</strong>
       </div>
     </div>
 
-    <label class="hg-field">
-      <span class="hg-label">函数模型</span>
-      <select
-        :value="modelId"
-        class="hg-select"
-        @change="emit('updateModelId', ($event.target as HTMLSelectElement).value)"
-      >
-        <option
-          v-for="model in models"
-          :key="model.id"
-          :value="model.id"
+    <section class="hg-control-block">
+      <label class="hg-field">
+        <span class="hg-label">函数模型</span>
+        <select
+          :value="modelId"
+          class="hg-select"
+          @change="emit('updateModelId', ($event.target as HTMLSelectElement).value)"
         >
-          {{ model.name }}
-        </option>
-      </select>
-    </label>
+          <option
+            v-for="model in models"
+            :key="model.id"
+            :value="model.id"
+          >
+            {{ model.name }}
+          </option>
+        </select>
+      </label>
 
-    <label class="hg-field">
-      <span class="hg-label">预设场景</span>
-      <select
-        :value="presetId"
-        class="hg-select"
-        @change="emit('updatePresetId', ($event.target as HTMLSelectElement).value)"
-      >
-        <option
-          v-for="preset in presets"
-          :key="preset.id"
-          :value="preset.id"
+      <label class="hg-field">
+        <span class="hg-label">预设场景</span>
+        <select
+          :value="presetId"
+          class="hg-select"
+          @change="emit('updatePresetId', ($event.target as HTMLSelectElement).value)"
         >
-          {{ preset.name }}
-        </option>
-      </select>
-    </label>
+          <option
+            v-for="preset in presets"
+            :key="preset.id"
+            :value="preset.id"
+          >
+            {{ preset.name }}
+          </option>
+        </select>
+      </label>
 
-    <label class="hg-field">
-      <span class="hg-label">画布主题</span>
-      <select
-        :value="theme"
-        class="hg-select"
-        @change="emit('updateTheme', ($event.target as HTMLSelectElement).value as ThemeMode)"
-      >
-        <option
-          v-for="themeItem in themeOptions"
-          :key="themeItem.id"
-          :value="themeItem.id"
+      <label class="hg-field">
+        <span class="hg-label">画布主题</span>
+        <select
+          :value="theme"
+          class="hg-select"
+          @change="emit('updateTheme', ($event.target as HTMLSelectElement).value as ThemeMode)"
         >
-          {{ themeItem.label }}
-        </option>
-      </select>
-    </label>
+          <option
+            v-for="themeItem in themeOptions"
+            :key="themeItem.id"
+            :value="themeItem.id"
+          >
+            {{ themeItem.label }}
+          </option>
+        </select>
+      </label>
+    </section>
 
-    <div class="hg-toggle-grid">
-      <label class="hg-toggle">
-        <input
-          :checked="showGrid"
-          type="checkbox"
-          @change="emit('updateShowGrid', ($event.target as HTMLInputElement).checked)"
-        >
-        <span>网格</span>
-      </label>
-      <label class="hg-toggle">
-        <input
-          :checked="showAxes"
-          type="checkbox"
-          @change="emit('updateShowAxes', ($event.target as HTMLInputElement).checked)"
-        >
-        <span>坐标轴</span>
-      </label>
-      <label class="hg-toggle">
-        <input
-          :checked="showTrail"
-          type="checkbox"
-          @change="emit('updateShowTrail', ($event.target as HTMLInputElement).checked)"
-        >
-        <span>拖尾</span>
-      </label>
-      <label class="hg-toggle">
-        <input
-          :checked="showParticles"
-          type="checkbox"
-          @change="emit('updateShowParticles', ($event.target as HTMLInputElement).checked)"
-        >
-        <span>粒子</span>
-      </label>
-      <label class="hg-toggle">
-        <input
-          :checked="autoCruiseEnabled"
-          type="checkbox"
-          @change="emit('updateAutoCruiseEnabled', ($event.target as HTMLInputElement).checked)"
-        >
-        <span>自动切换</span>
-      </label>
-    </div>
+    <section class="hg-control-block">
+      <div class="hg-toggle-grid">
+        <label class="hg-toggle">
+          <input
+            :checked="showGrid"
+            type="checkbox"
+            @change="emit('updateShowGrid', ($event.target as HTMLInputElement).checked)"
+          >
+          <span>网格</span>
+        </label>
+        <label class="hg-toggle">
+          <input
+            :checked="showAxes"
+            type="checkbox"
+            @change="emit('updateShowAxes', ($event.target as HTMLInputElement).checked)"
+          >
+          <span>坐标轴</span>
+        </label>
+        <label class="hg-toggle">
+          <input
+            :checked="showTrail"
+            type="checkbox"
+            @change="emit('updateShowTrail', ($event.target as HTMLInputElement).checked)"
+          >
+          <span>拖尾</span>
+        </label>
+        <label class="hg-toggle">
+          <input
+            :checked="showParticles"
+            type="checkbox"
+            @change="emit('updateShowParticles', ($event.target as HTMLInputElement).checked)"
+          >
+          <span>粒子</span>
+        </label>
+        <label class="hg-toggle">
+          <input
+            :checked="autoCruiseEnabled"
+            type="checkbox"
+            @change="emit('updateAutoCruiseEnabled', ($event.target as HTMLInputElement).checked)"
+          >
+          <span>自动切换</span>
+        </label>
+      </div>
+    </section>
 
     <section
       class="hg-cruise-card"

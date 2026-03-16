@@ -1,5 +1,7 @@
 <script setup lang="ts">
-defineProps<{
+import { computed, ref } from 'vue'
+
+const props = defineProps<{
   width: number
   height: number
   gradientFrom: string
@@ -27,15 +29,44 @@ defineProps<{
   formulaName: string
   formulaText: string
 }>()
+
+const pointerX = ref(0.5)
+const pointerY = ref(0.5)
+
+const stagePointerStyle = computed(() => ({
+  '--hg-pointer-x': `${(pointerX.value * 100).toFixed(2)}%`,
+  '--hg-pointer-y': `${(pointerY.value * 100).toFixed(2)}%`,
+  '--hg-shift-x': `${((pointerX.value - 0.5) * 22).toFixed(2)}px`,
+  '--hg-shift-y': `${((pointerY.value - 0.5) * 18).toFixed(2)}px`,
+}))
+
+function handlePointerMove(event: PointerEvent): void {
+  const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+  pointerX.value = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width))
+  pointerY.value = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height))
+}
+
+function handlePointerLeave(): void {
+  pointerX.value = 0.5
+  pointerY.value = 0.5
+}
 </script>
 
 <template>
-  <section class="hg-stage">
+  <section
+    class="hg-stage"
+    :style="stagePointerStyle"
+    @pointermove="handlePointerMove"
+    @pointerleave="handlePointerLeave"
+  >
+    <div class="hg-stage-caustic" />
+    <div class="hg-stage-specular" />
+    <div class="hg-stage-vignette" />
     <svg
       class="hg-svg"
-      :viewBox="`0 0 ${width} ${height}`"
-      :width="width"
-      :height="height"
+      :viewBox="`0 0 ${props.width} ${props.height}`"
+      :width="props.width"
+      :height="props.height"
     >
       <defs>
         <linearGradient
@@ -47,11 +78,11 @@ defineProps<{
         >
           <stop
             offset="0%"
-            :stop-color="gradientFrom"
+            :stop-color="props.gradientFrom"
           />
           <stop
             offset="100%"
-            :stop-color="gradientTo"
+            :stop-color="props.gradientTo"
           />
         </linearGradient>
         <filter
@@ -75,50 +106,50 @@ defineProps<{
       <rect
         x="0"
         y="0"
-        :width="width"
-        :height="height"
+        :width="props.width"
+        :height="props.height"
         fill="transparent"
       />
 
-      <g v-if="showGrid">
+      <g v-if="props.showGrid">
         <line
-          v-for="(line, index) in gridLines"
+          v-for="(line, index) in props.gridLines"
           :key="`grid-${index}`"
           :x1="line.x1"
           :y1="line.y1"
           :x2="line.x2"
           :y2="line.y2"
-          :stroke="stageTheme.gridColor"
+          :stroke="props.stageTheme.gridColor"
           stroke-width="1"
         />
       </g>
 
-      <g v-if="showAxes">
+      <g v-if="props.showAxes">
         <line
           :x1="0"
-          :y1="zeroY"
-          :x2="width"
-          :y2="zeroY"
-          :stroke="stageTheme.axisColor"
+          :y1="props.zeroY"
+          :x2="props.width"
+          :y2="props.zeroY"
+          :stroke="props.stageTheme.axisColor"
           stroke-width="1.8"
         />
         <line
-          :x1="zeroX"
+          :x1="props.zeroX"
           :y1="0"
-          :x2="zeroX"
-          :y2="height"
-          :stroke="stageTheme.axisColor"
+          :x2="props.zeroX"
+          :y2="props.height"
+          :stroke="props.stageTheme.axisColor"
           stroke-width="1.8"
         />
       </g>
 
       <g>
         <path
-          v-for="(path, index) in flattenedTrailPaths"
+          v-for="(path, index) in props.flattenedTrailPaths"
           :key="`trail-${index}`"
           :d="path.path"
           fill="none"
-          :stroke="lineColor"
+          :stroke="props.lineColor"
           :stroke-opacity="path.opacity"
           :stroke-width="path.width"
           stroke-linecap="round"
@@ -127,16 +158,16 @@ defineProps<{
       </g>
 
       <g
-        :style="{ opacity: 0.4 + effects.glow * 0.45 }"
+        :style="{ opacity: 0.4 + props.effects.glow * 0.45 }"
         filter="url(#hg-glow)"
       >
         <path
-          v-for="(path, index) in primaryPaths"
+          v-for="(path, index) in props.primaryPaths"
           :key="`glow-${index}`"
           :d="path"
           fill="none"
-          :stroke="lineColor"
-          :stroke-width="effects.lineWidth + effects.glow * 3"
+          :stroke="props.lineColor"
+          :stroke-width="props.effects.lineWidth + props.effects.glow * 3"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
@@ -144,37 +175,37 @@ defineProps<{
 
       <g>
         <path
-          v-for="(path, index) in primaryPaths"
+          v-for="(path, index) in props.primaryPaths"
           :key="`main-${index}`"
           :d="path"
           fill="none"
           stroke="url(#hg-gradient)"
-          :stroke-width="effects.lineWidth"
+          :stroke-width="props.effects.lineWidth"
           stroke-linecap="round"
           stroke-linejoin="round"
-          :class="stagePathClass"
+          :class="props.stagePathClass"
         />
       </g>
 
-      <g v-if="showParticles">
+      <g v-if="props.showParticles">
         <circle
-          v-for="(dot, index) in particlePoints"
+          v-for="(dot, index) in props.particlePoints"
           :key="`dot-${index}`"
           :cx="dot.x"
           :cy="dot.y"
           :r="dot.radius"
-          :fill="lineColor"
+          :fill="props.lineColor"
           :fill-opacity="dot.opacity"
         />
       </g>
     </svg>
 
     <div
-      v-if="formulaVisible"
+      v-if="props.formulaVisible"
       class="hg-formula"
     >
-      <p>{{ formulaName }}</p>
-      <code>{{ formulaText }}</code>
+      <p>{{ props.formulaName }}</p>
+      <code>{{ props.formulaText }}</code>
     </div>
   </section>
 </template>
